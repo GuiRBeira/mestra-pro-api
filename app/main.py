@@ -7,7 +7,8 @@ app = FastAPI(title="MestraPro API")
 
 # ... (seu código do CORS Middleware continua aqui) ...
 origins = ["http://localhost:5173",
-                      "mestrapro.vercel.app"]
+                      "https://mestrapro.vercel.app",
+                      ]
 
 app.add_middleware(CORSMiddleware,
                    allow_origins=origins,
