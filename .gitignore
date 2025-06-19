@@ -1,0 +1,32 @@
+# Arquivos de Ambiente Virtual
+venv/
+.venv/
+env/
+
+# Arquivo de segredos (O MAIS IMPORTANTE)
+.env
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de cache e configuração de editores
+.vscode/
+.idea/
+*.swp
+
+# Logs e bancos de dados locais (se usássemos SQLite)
+*.log
+*.db
+*.sqlite3
+
+# Arquivos de build/distribuição do Python
+build/
+dist/
+*.egg-info/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
