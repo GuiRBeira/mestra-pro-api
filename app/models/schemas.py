@@ -11,11 +11,11 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)  # <-- ADICIONE ESTA LINHA
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
 
-    # A relação que diz que um User pode ter muitos LessonPlans
     lesson_plans = relationship("LessonPlan", back_populates="owner")
 
 class LessonPlan(Base):
@@ -44,11 +44,13 @@ class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
+    name: str  # <-- ADICIONE ESTA LINHA
     password: str
 
 class UserOut(UserBase):
     id: int
+    name: str  # <-- ADICIONE ESTA LINHA TAMBÉM
     is_active: bool
 
     class Config:
-        from_attributes = True # Permite que o Pydantic leia dados de objetos SQLAlchemy
+        from_attributes = True
