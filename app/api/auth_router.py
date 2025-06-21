@@ -6,7 +6,7 @@ from app.database import get_db
 from app.security import get_password_hash # Importa nossa função de hash
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
-from app.security import verify_password, create_access_token
+from app.security import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
@@ -41,7 +41,7 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     user = db.query(schemas.User).filter(schemas.User.email == form_data.username).first()
 
     # Verifica se o usuário existe e se a senha está correta
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    if not user or not verify_password(form_data.password, user.hashed_password): # type: ignore
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="E-mail ou senha incorretos",
