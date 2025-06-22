@@ -39,6 +39,7 @@ class LessonPlanRequest(BaseModel):
     topic: str
     grade: str
     subject: str
+    owner_id: int # <-- Adicione esta linha (temporariamente para teste)
 
 class UserBase(BaseModel):
     email: str
