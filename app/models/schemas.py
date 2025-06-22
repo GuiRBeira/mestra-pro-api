@@ -39,18 +39,26 @@ class LessonPlanRequest(BaseModel):
     topic: str
     grade: str
     subject: str
-    owner_id: int # <-- Adicione esta linha (temporariamente para teste)
+
+class LessonPlanInList(BaseModel):
+    id: int
+    topic: str
+    grade: str
+    subject: str
+
+    class Config:
+        from_attributes = True
 
 class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
-    name: str  # <-- ADICIONE ESTA LINHA
+    name: str
     password: str
 
 class UserOut(UserBase):
     id: int
-    name: str  # <-- ADICIONE ESTA LINHA TAMBÉM
+    name: str
     is_active: bool
 
     class Config:

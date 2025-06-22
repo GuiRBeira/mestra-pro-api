@@ -7,6 +7,9 @@ from app.security import get_password_hash # Importa nossa função de hash
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 from app.security import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
+from app.security import SECRET_KEY, ALGORITHM, jwt
 
 router = APIRouter()
 
@@ -55,3 +58,24 @@ def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db:
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Não foi possível validar as credenciais",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) #type: ignore
+        email: str = payload.get("sub") #type: ignore
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    user = db.query(schemas.User).filter(schemas.User.email == email).first()
+    if user is None:
+        raise credentials_exception
+    return user
