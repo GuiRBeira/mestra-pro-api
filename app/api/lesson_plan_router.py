@@ -95,3 +95,32 @@ def download_lesson_plan_pdf(plan_id: int,
         media_type='application/pdf',
         headers={'Content-Disposition': f'attachment; filename={file_name}'}
     )
+
+@router.delete("/{plan_id}/delete", status_code=status.HTTP_200_OK)
+def delete_lesson_plan(
+    plan_id: int,
+    db: Session = Depends(get_db),
+    current_user: schemas.UserOut = Depends(get_current_user)
+):
+    """
+    Deleta um plano de aula específico.
+    Apenas o dono do plano de aula pode deletá-lo.
+    """
+    # Busca o plano no banco para garantir que ele existe E pertence ao usuário logado
+    plan_to_delete = db.query(schemas.LessonPlan).filter(
+        schemas.LessonPlan.id == plan_id,
+        schemas.LessonPlan.owner_id == current_user.id
+    ).first()
+
+    # Se a busca não encontrar nada, significa que o plano não existe ou não é do usuário
+    if not plan_to_delete:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Plano de aula não encontrado ou você não tem permissão para esta ação."
+        )
+    
+    # Se encontrou, deleta o plano do banco de dados
+    db.delete(plan_to_delete)
+    db.commit()
+    
+    return {"detail": f"Plano de aula com ID {plan_id} deletado com sucesso."}
