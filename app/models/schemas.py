@@ -11,7 +11,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)  # <-- ADICIONE ESTA LINHA
+    name = Column(String, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     is_active = Column(Boolean, default=True)
@@ -34,6 +34,14 @@ class LessonPlan(Base):
     owner = relationship("User", back_populates="lesson_plans")
 
 # --- MODELOS DE DADOS DA API (Pydantic) ---
+
+# NOVO SCHEMA PARA ENVIAR O CONTEÚDO DO PLANO DE AULA
+class LessonPlanContent(BaseModel):
+    content: str
+
+# NOVO SCHEMA PARA A REQUISIÇÃO DE COMPILAÇÃO LATEX
+class LatexRequest(BaseModel):
+    latex_code: str
 
 class LessonPlanRequest(BaseModel):
     topic: str

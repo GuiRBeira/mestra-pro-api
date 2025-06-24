@@ -1,22 +1,28 @@
 # Em: app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import lesson_plan_router, auth_router # Importa nosso novo arquivo de rotas
+# Importa os roteadores existentes e o novo roteador do beamer
+from app.api import lesson_plan_router, auth_router, beamer_router
 
 app = FastAPI(title="MestraPro API")
 
-# ... (seu código do CORS Middleware continua aqui) ...
-origins = ["http://localhost:5173",
-                      "127.0.0.1:5173",
-                      "https://mestrapro.vercel.app",
-                      ]
+origins = [
+    "http://localhost:5173",
+    "127.0.0.1:5173",
+    "https://mestrapro.vercel.app",
+]
 
-app.add_middleware(CORSMiddleware,
-                   allow_origins=origins,
-                   allow_credentials=True,
-                   allow_methods=["*"],
-                   allow_headers=["*"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-# Inclui todas as rotas do nosso arquivo de rotas na aplicação principal
+# Inclui as rotas de autenticação
 app.include_router(auth_router.router, prefix="/auth", tags=["Autenticação"])
+# Inclui as rotas de planos de aula
 app.include_router(lesson_plan_router.router, prefix="/api/v1", tags=["Planos de Aula"])
+# INCLUI AS NOVAS ROTAS PARA GERAÇÃO DE SLIDES BEAMER
+app.include_router(beamer_router.router, prefix="/api/v1/beamer", tags=["Slides Beamer"])
