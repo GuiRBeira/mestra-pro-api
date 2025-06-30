@@ -1,5 +1,3 @@
-# Em: app/models/schemas.py
-
 from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
@@ -27,21 +25,11 @@ class LessonPlan(Base):
     subject = Column(String)
     content = Column(Text)
     
-    # A chave estrangeira que aponta para o id da tabela 'users'
     owner_id = Column(Integer, ForeignKey("users.id"))
     
-    # A relação inversa, que permite que um LessonPlan saiba quem é seu 'owner'
     owner = relationship("User", back_populates="lesson_plans")
 
 # --- MODELOS DE DADOS DA API (Pydantic) ---
-
-# NOVO SCHEMA PARA ENVIAR O CONTEÚDO DO PLANO DE AULA
-class LessonPlanContent(BaseModel):
-    content: str
-
-# NOVO SCHEMA PARA A REQUISIÇÃO DE COMPILAÇÃO LATEX
-class LatexRequest(BaseModel):
-    latex_code: str
 
 class LessonPlanRequest(BaseModel):
     topic: str

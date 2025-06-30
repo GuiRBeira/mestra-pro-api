@@ -1,4 +1,3 @@
-# Em: app/services/ia_service.py
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -44,33 +43,3 @@ def gerar_plano_de_aula_com_ia(topic: str, grade: str, subject: str) -> str:
         # Em caso de erro na API da IA, retornamos uma mensagem amigável
         print(f"Erro ao chamar a API do Gemini: {e}")
         return "Ocorreu um erro ao gerar o plano de aula com a IA. Tente novamente mais tarde."
-
-def gerar_beamer_com_ia(plano_de_aula_markdown: str) -> str:
-    """
-    Usa a IA para converter um plano de aula em Markdown para código LaTeX Beamer.
-    """
-    prompt = f"""
-    Atue como um especialista em LaTeX e apresentações Beamer.
-    Sua tarefa é converter o plano de aula a seguir, que está em formato Markdown, para um código LaTeX Beamer completo e compilável.
-
-    Requisitos do Código Beamer:
-    1.  Use o `\\documentclass{{beamer}}`.
-    2.  Use um tema visualmente agradável, como `\\usetheme{{Madrid}}` ou `\\usetheme{{Boadilla}}`.
-    3.  Extraia o Título, Disciplina e Série do plano para preencher o `\\title{{}}`, `\\author{{}}` e `\\institute{{}}` da apresentação. O autor pode ser "MestraPro AI".
-    4.  Crie um slide de título com `\\frame{{\\titlepage}}`.
-    5.  Para cada seção principal do plano de aula (como "Objetivos de Aprendizagem", "Conteúdo Programático", etc.), crie um frame separado com `\\begin{{frame}}{{Título da Seção}}`.
-    6.  Dentro de cada frame, use `\\begin{{itemize}}` e `\\item` para listar os pontos.
-    7.  O código gerado deve ser exclusivamente o código LaTeX. Não inclua explicações, comentários ou a palavra "markdown".
-
-    Aqui está o plano de aula em Markdown para ser convertido:
-    ---
-    {plano_de_aula_markdown}
-    ---
-    """
-
-    try:
-        response = model.generate_content(prompt)
-        return response.text
-    except Exception as e:
-        print(f"Erro ao chamar a API do Gemini para gerar Beamer: {e}")
-        return "\\documentclass{{beamer}}\n\\begin{{document}}\n\\frame{{\n  \\frametitle{{Erro}}\n  Ocorreu um erro ao gerar os slides. Tente novamente.\n}}\n\\end{{document}}"

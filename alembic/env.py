@@ -1,4 +1,3 @@
-# No topo do arquivo alembic/env.py
 import os
 from dotenv import load_dotenv
 from logging.config import fileConfig
